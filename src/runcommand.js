@@ -181,7 +181,7 @@ const funcs = {
             
             var senderIsAdmin = groupInfo.admins.includes(senderId);
             if(!senderIsAdmin){
-                utils.sendError(`hadi len.`, threadId);
+                utils.sendError(`hadi len.`, groupInfo.threadId);
             }
             else if (groupInfo.members[user]) {
                 // Kick with optional time specified in call only if specified in command
