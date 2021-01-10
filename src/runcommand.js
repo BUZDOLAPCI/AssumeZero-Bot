@@ -1431,10 +1431,10 @@ const funcs = {
         const user = cmatch[2].toLowerCase();
         const userId = groupInfo.members[user];
 
-        const senderName = groupInfo.names[senderID].toLowerCase();
-        if(senderName.includes("gizem")){
-            utils.sendMessage(`hadi len.`, threadId);
-        }
+        // const senderName = groupInfo.names[senderID].toLowerCase();
+        // if(senderName.includes("gizem")){
+        //     utils.sendMessage(`hadi len.`, threadId);
+        // }
         
         utils.sendMessage(`hoppili ${groupInfo.names[senderID]}.`, threadId);
         
