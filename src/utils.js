@@ -762,6 +762,8 @@ exports.clearVotekickScores = (groupInfo, callback = () => { }) => {
 
     for (let m in members) {
         if (members.hasOwnProperty(m)) {
+            let err;
+            let val;
             this.setVotekickYesScore(m, 0, (err, val));
             this.setVotekickNoScore(m, 0, (err, val));
         }
