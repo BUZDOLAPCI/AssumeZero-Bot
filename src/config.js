@@ -68,8 +68,8 @@ exports.defaultColor = "#67B868";
 exports.numColors = 10;
 
 // Default emoji
-exports.defaultEmoji = "😂";
-// exports.defaultEmoji = "🚀";
+// exports.defaultEmoji = "😂";
+exports.defaultEmoji = "🚀";
 
 // For xkcd searching capability
 // Custom search engine that searches the xkcd website only
