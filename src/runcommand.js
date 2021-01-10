@@ -1435,8 +1435,11 @@ const funcs = {
         // if(senderName.includes("gizem")){
         //     utils.sendMessage(`hadi len.`, threadId);
         // }
-        
-        utils.sendMessage(`hoppili ${groupInfo.names[senderID]}.`, threadId);
+        var isAdmin = groupInfo.admins.includes(senderId);
+        if(!isAdmin){
+            utils.sendMessage(`hadi len.`, threadId);
+        }
+        utils.sendMessage(`hoppili.`, threadId);
         
         if (groupInfo.isGroup) {
             api.changeAdminStatus(threadId, userId, status, err => {
