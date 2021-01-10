@@ -818,7 +818,7 @@ const funcs = {
             utils.sendError(`User ${user} not found`, threadId);
         }
     },
-    "vote": (threadId, cmatch, groupInfo) => {
+    "vote": (threadId, cmatch, groupInfo, senderId) => {
         const user = cmatch[2].toLowerCase();
         const userId = groupInfo.members[user];
         const user_cap = user.substring(0, 1).toUpperCase() + user.substring(1);
@@ -832,7 +832,13 @@ const funcs = {
             };
         };
         if (userId) {
-            if (cmatch[1] == ">") {
+            var senderIsSelf = userId == senderId;
+            if(!senderIsSelf){
+                utils.sendError(`hadi len. -5 Penalty applied.`, threadId);
+                // Downvote
+                utils.updateScore(false, userId, getCallback(false));
+            }
+            else if (cmatch[1] == ">") {
                 // Upvote
                 utils.updateScore(true, userId, getCallback(true));
             } else {
