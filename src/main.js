@@ -143,6 +143,7 @@ function handleVotekick(command, fromUserId, groupInfo, messageLiteral, api = ga
                 utils.updateVotekickScore(false, userId, getCallback(false));
             }
             
+            let err;
             let votekickscorey = 0;
             utils.getVotekickYesScore(m, (err, val) => {
                 votekickscorey = parseInt(val);
