@@ -59,7 +59,7 @@ exports.order66Time = 15;
 exports.banTime = 30;
 
 // Number of times to message user with the "wake up" command
-exports.wakeUpTimes = 20;
+exports.wakeUpTimes = 8;
 
 // Default color (hex)
 exports.defaultColor = "#67B868";
