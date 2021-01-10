@@ -290,6 +290,8 @@ exports.updateGroupInfo = (threadId, message, callback = () => { }, sendsInit = 
                             info.pinned = {};
                             info.events = {};
                             info.mentionGroups = {};
+                            info.currentvotekickid = "0";
+                            info.currentvotekickcount = "0";
                             info.following = {};
                             info.feeds = {};
                             info.isGroup = data.isGroup;
@@ -631,8 +633,26 @@ exports.setScore = (userId, score, callback) => {
     mem.set(`userscore_${userId}`, score, {}, callback);
 };
 
+// Functions for getting/setting user scores (doesn't save much in terms of
+// code/DRY, but wraps the functions so that it's easy to change how they're stored)
+exports.setVotekickYesScore = (userId, score, callback) => {
+    mem.set(`uservotekickyesscore_${userId}`, score, {}, callback);
+};
+
+exports.setVotekickNoScore = (userId, score, callback) => {
+    mem.set(`uservotekicknoscore_${userId}`, score, {}, callback);
+};
+
 exports.getScore = (userId, callback) => {
     mem.get(`userscore_${userId}`, callback);
+};
+
+exports.getVotekickYesScore = (userId, callback) => {
+    mem.get(`uservotekickyesscore_${userId}`, callback);
+};
+
+exports.getVotekickNoScore = (userId, callback) => {
+    mem.get(`uservotekicknoscore_${userId}`, callback);
 };
 
 // Updates the user's score either by (if isAdd) increasing or (otherwise) decreasing
@@ -654,6 +674,47 @@ exports.updateScore = (isAdd, userId, callback) => {
         });
     });
 };
+
+// Updates the user's score either by (if isAdd) increasing or (otherwise) decreasing
+// the user's score by the default value set in config, or 5 points if not set
+// Returns a callback with error, success, and a value equal to the user's new score
+exports.updateVotekickScore = (isAdd, userId, callback) => {
+    this.getVotekickYesScore(userId, (err, val) => {
+        if (err) {
+            callback(err);
+        }
+        // Convert from buffer & grab current score (set 0 if it doesn't yet exist)
+        const score = val ? parseInt(val.toString()) : 0;
+
+        // Can be easily customized to accept a score parameter if so desired
+        const points = 1; // Default to five points
+        const newScore = (score + points);
+        if(isAdd)
+        {
+            this.setVotekickYesScore(userId, `${newScore}`, (err, success) => {
+                callback(err, success, newScore);
+            });
+        }
+    });
+    this.getVotekickNoScore(userId, (err, val) => {
+        if (err) {
+            callback(err);
+        }
+        // Convert from buffer & grab current score (set 0 if it doesn't yet exist)
+        const score = val ? parseInt(val.toString()) : 0;
+
+        // Can be easily customized to accept a score parameter if so desired
+        const points = 1; // Default to five points
+        const newScore = (score + points);
+        if(!isAdd)
+        {
+            this.setVotekickNoScore(userId, `${newScore}`, (err, success) => {
+                callback(err, success, newScore);
+            });
+        }
+    });
+};
+
 
 exports.getAllScores = (groupInfo, callback = () => { }) => {
     const members = groupInfo.names;
@@ -679,6 +740,30 @@ exports.getAllScores = (groupInfo, callback = () => { }) => {
                     "score": parseInt(val) || "0"
                 });
             });
+        }
+    }
+};
+
+exports.clearVotekickScores = (groupInfo, callback = () => { }) => {
+    const members = groupInfo.names;
+    let results = [];
+    const now = (new Date()).getTime();
+    let current = now;
+
+    function updateResults(value) {
+        results.push(value);
+        const success = (results.length == Object.keys(members).length);
+
+        current = (new Date()).getTime();
+        if (success || (current - now) >= config.asyncTimeout) {
+            callback(success, results);
+        }
+    }
+
+    for (let m in members) {
+        if (members.hasOwnProperty(m)) {
+            this.setVotekickYesScore(m, 0, (err, val));
+            this.setVotekickNoScore(m, 0, (err, val));
         }
     }
 };

@@ -84,6 +84,10 @@ exports.xkcd = {
 // See commands.js for more info
 exports.votePoints = 5;
 
+// How many points a vote is worth by default
+// See commands.js for more info
+exports.voteKickThreshold = 3;
+
 // Default playlist to use if group has no added playlists
 exports.defaultPlaylist = {
     "name": "Assume Zero Brain Power",

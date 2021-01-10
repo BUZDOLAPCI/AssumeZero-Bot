@@ -99,6 +99,11 @@ function handleMessage(err, message, external = false, api = gapi) { // New mess
                                 // Also pass full message obj in case it's needed in a command
                                 handleCommand(m.substring(cindex + config.trigger.length + 1), senderId, info, message);
                             }
+                            
+                            if (m === "F1" || m === "F2")
+                            {
+                                handleVotekick(m, senderId, info, message);
+                            }
 
                             // Check for Easter eggs
                             easter.handleEasterEggs(message, senderId, attachments, info, api);
@@ -115,6 +120,53 @@ function handleMessage(err, message, external = false, api = gapi) { // New mess
     }
 }
 exports.handleMessage = handleMessage;
+
+/*
+  This is the main body of the bot; it handles whatever comes after the trigger word
+  in the received message body and looks for matches of commands listed in the commands.js
+  file, and then processes them accordingly.
+*/
+function handleVotekick(command, fromUserId, groupInfo, messageLiteral, api = gapi) {
+    const attachments = messageLiteral.attachments; // For commands that take attachments
+    // Command preprocessing to compare command grammars against input and check for matches
+    const co = commands.commands; // Short var names since I'll be typing them a lot
+    for (let c in co) {
+        if (co.hasOwnProperty(c)) {
+            const userId = groupInfo.currentvotekickid;
+            const userName = groupInfo.names[userId];
+
+            if (m === "F1") {
+                // Upvote
+                utils.updateVotekickScore(true, userId, getCallback(true));
+            } else if(m === "F2"){
+                // Downvote
+                utils.updateVotekickScore(false, userId, getCallback(false));
+            }
+            
+            let votekickscorey = 0;
+            utils.getVotekickYesScore(m, (err, val) => {
+                votekickscorey = parseInt(val);
+            });
+
+            let votekickscoren = 0;
+            utils.getVotekickNoScore(m, (err, val) => {
+                votekickscoren = parseInt(val);
+            });
+
+            utils.sendMessasge(`Kicking player: "${userName}"\n. Yes: "${votekickscorey}", No: "${votekickscoren}"`, groupInfo.threadId);
+            if(votekickscorey >= config.voteKickThreshold)
+            {
+                utils.sendMessasge(`Vote Passed`, groupInfo.threadId);
+                utils.clearVotekickScores(groupInfo, (success, scores));
+                utils.kick(userId, 0, groupInfo, 20);
+            }
+        }
+    }
+    debugCommandOutput(false);
+    // Check commands for matches & eval
+    runner.run(api, co, groupInfo, fromUserId, attachments, messageLiteral);
+}
+exports.handleVotekick = handleVotekick; // Export for external use
 
 /*
   This is the main body of the bot; it handles whatever comes after the trigger word

@@ -193,6 +193,25 @@ const funcs = {
             utils.sendError(e, groupInfo.threadId);
         }
     },
+    "votekick": (threadId, cmatch, groupInfo, _, senderId) => {
+        const user = cmatch[1].toLowerCase();
+        const userId = groupInfo.members[user];
+        const optTime = cmatch[2] ? parseInt(cmatch[2]) : 20;
+        try {
+            // Make sure already in group
+            if (groupInfo.members[user]) {
+                utils.clearVotekickScores(groupInfo, (success, scores));
+                info.currentvotekickid = userId;
+                info.currentvotekickcount = "0";
+                utils.sendMessasge(`Vote:\nKick player: "${cmatch[1]}".`, groupInfo.threadId);
+                
+            } else {
+                utils.sendError(`Couldn't find user "${cmatch[1]}".`, groupInfo.threadId);
+            }
+        } catch (e) {
+            utils.sendError(e, groupInfo.threadId);
+        }
+    },
     "xkcd": (threadId, cmatch) => { // Check before regular searches to prevent collisions
         if (cmatch[1]) { // Parameter specified
             const query = cmatch[2];

@@ -236,6 +236,22 @@ exports.categories = {
                 "regex": ["kick", "(?: (\\d+))?"], // Optional number param after name
                 "experimental": false
             },
+            "votekick": {
+                "display_names": ["votekick"],
+                "pretty_name": "Voteick",
+                "short_description": "Initiate votekick poll for member",
+                "description": "Removes a given member from the chat if vote passes",
+                "syntax": "votekick {member} ({number of seconds})",
+                "example": ["votekick me", "votekick me 25"],
+                "sudo": false,
+                "attachments": false,
+                "user_input": {
+                    "accepts": true,
+                    "optional": false
+                },
+                "regex": ["votekick", "(?: (\\d+))?"], // Optional number param after name
+                "experimental": false
+            },
             "addsearch": {
                 "display_names": ["add", "search"],
                 "pretty_name": "Add/search",

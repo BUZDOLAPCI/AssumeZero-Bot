@@ -212,5 +212,9 @@ let groupInfo = {
     "names": {string: string},
     // A regular expression that matches first names and aliases of members in the thread
     "userRegExp": string
+    // Name of the chat (if it exists), or the names of its members separated by '/'
+    "currentvotekickid": string,
+    // Name of the chat (if it exists), or the names of its members separated by '/'
+    "currentvotekickcount": string,
 }
 ```
