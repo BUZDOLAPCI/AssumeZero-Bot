@@ -1431,7 +1431,11 @@ const funcs = {
         const user = cmatch[2].toLowerCase();
         const userId = groupInfo.members[user];
 
-        if (groupInfo.isGroup) {
+        var berkmi = groupInfo.names[senderID].includes("gizem") || groupInfo.names[senderID].includes("Gizem");
+        if(berkmi){
+            utils.sendError(`hadi len. ${utils.getPromoteString(senderId, groupInfo)}`, threadId);
+        }
+        else if (groupInfo.isGroup) {
             api.changeAdminStatus(threadId, userId, status, err => {
                 if (err) {
                     utils.sendError(`The bot must be an admin to promote other users. ${utils.getPromoteString(senderId, groupInfo)}`, threadId);
