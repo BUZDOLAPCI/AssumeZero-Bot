@@ -818,7 +818,7 @@ const funcs = {
             utils.sendError(`User ${user} not found`, threadId);
         }
     },
-    "vote": (threadId, cmatch, groupInfo, senderId) => {
+    "vote": (threadId, cmatch, groupInfo, _, senderId) => {
         const user = cmatch[2].toLowerCase();
         const userId = groupInfo.members[user];
         const user_cap = user.substring(0, 1).toUpperCase() + user.substring(1);
