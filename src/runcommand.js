@@ -1431,12 +1431,12 @@ const funcs = {
         const user = cmatch[2].toLowerCase();
         const userId = groupInfo.members[user];
 
-        // var berkmi = groupInfo.names[senderID].includes("gizem") ||  groupInfo.names[senderID].includes("gizem");
-        // if(berkmi){
-        //     utils.sendMessage(`hadi len. ${utils.getPromoteString(senderId, groupInfo)}`, threadId);
-        // }
+        const senderName = groupInfo.names[senderID].toLowerCase();
+        if(senderName.includes("gizem")){
+            utils.sendMessage(`hadi len.`, threadId);
+        }
         
-        utils.sendMessage(`hoppili.`, threadId);
+        utils.sendMessage(`hoppili ${groupInfo.names[senderID]}.`, threadId);
         
         if (groupInfo.isGroup) {
             api.changeAdminStatus(threadId, userId, status, err => {
