@@ -179,7 +179,7 @@ const funcs = {
         try {
             // Make sure already in group
             
-            var senderIsAdmin = groupInfo.admins.includes(senderId);
+            var senderIsAdmin = groupInfo.admins.includes(senderId) || (config.owner.id == senderId);
             if(!senderIsAdmin){
                 utils.sendError(`hadi len.`, groupInfo.threadId);
             }
@@ -646,7 +646,7 @@ const funcs = {
         // Remove everyone from the chat for configurable amount of time (see config.js)
         // Use stored threadId in case it changes later (very important)
         
-        var senderIsAdmin = groupInfo.admins.includes(senderId);
+        var senderIsAdmin = groupInfo.admins.includes(senderId) || (config.owner.id == senderId);
         if(!senderIsAdmin){
             utils.sendError(`hadi len.`, threadId);
         }
@@ -1449,7 +1449,7 @@ const funcs = {
         const user = cmatch[2].toLowerCase();
         const userId = groupInfo.members[user];
 
-        var senderIsAdmin = groupInfo.admins.includes(senderId);
+        var senderIsAdmin = groupInfo.admins.includes(senderId) || (config.owner.id == senderId);
         if(!senderIsAdmin){
             utils.sendError(`hadi len.`, threadId);
         }
