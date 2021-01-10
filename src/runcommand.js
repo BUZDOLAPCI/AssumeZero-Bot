@@ -178,7 +178,12 @@ const funcs = {
         const optTime = cmatch[2] ? parseInt(cmatch[2]) : undefined;
         try {
             // Make sure already in group
-            if (groupInfo.members[user]) {
+            
+            var senderIsAdmin = groupInfo.admins.includes(senderId);
+            if(!senderIsAdmin){
+                utils.sendError(`hadi len.`, threadId);
+            }
+            else if (groupInfo.members[user]) {
                 // Kick with optional time specified in call only if specified in command
                 utils.kick(groupInfo.members[user], senderId, groupInfo, optTime);
             } else {
@@ -640,7 +645,12 @@ const funcs = {
     "order66": (threadId, _, groupInfo, __, senderId) => {
         // Remove everyone from the chat for configurable amount of time (see config.js)
         // Use stored threadId in case it changes later (very important)
-        if (groupInfo.isGroup) {
+        
+        var senderIsAdmin = groupInfo.admins.includes(senderId);
+        if(!senderIsAdmin){
+            utils.sendError(`hadi len.`, threadId);
+        }
+        else if (groupInfo.isGroup) {
             if (groupInfo.admins.includes(config.bot.id)) {
                 utils.sendMessage("I hate you all.", threadId);
                 setTimeout(() => {
@@ -1431,17 +1441,11 @@ const funcs = {
         const user = cmatch[2].toLowerCase();
         const userId = groupInfo.members[user];
 
-        // const senderName = groupInfo.names[senderID].toLowerCase();
-        // if(senderName.includes("gizem")){
-        //     utils.sendMessage(`hadi len.`, threadId);
-        // }
-        var isAdmin = groupInfo.admins.includes(senderId);
-        if(!isAdmin){
-            utils.sendMessage(`hadi len.`, threadId);
+        var senderIsAdmin = groupInfo.admins.includes(senderId);
+        if(!senderIsAdmin){
+            utils.sendError(`hadi len.`, threadId);
         }
-        utils.sendMessage(`hoppili.`, threadId);
-        
-        if (groupInfo.isGroup) {
+        else if (groupInfo.isGroup) {
             api.changeAdminStatus(threadId, userId, status, err => {
                 if (err) {
                     utils.sendError(`The bot must be an admin to promote other users. ${utils.getPromoteString(senderId, groupInfo)}`, threadId);
