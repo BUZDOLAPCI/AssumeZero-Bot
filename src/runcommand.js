@@ -832,8 +832,10 @@ const funcs = {
             };
         };
         if (userId) {
-            var senderIsSelf = userId == senderId;
-            if(!senderIsSelf){
+            var senderIsSelf = userId == senderId; 
+            utils.sendMessage(`senderid ${senderId}`, threadId);
+            utils.sendMessage(`userid ${userId}`, threadId);
+            if(senderIsSelf){
                 utils.sendError(`hadi len. -5 Penalty applied.`, threadId);
                 // Downvote
                 utils.updateScore(false, userId, getCallback(false));
