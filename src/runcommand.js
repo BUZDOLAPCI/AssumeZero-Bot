@@ -201,6 +201,7 @@ const funcs = {
             // Make sure already in group
             if (groupInfo.members[user]) {
                 let success;
+                let scores;
                 utils.clearVotekickScores(groupInfo, (success, scores));
                 info.currentvotekickid = userId;
                 info.currentvotekickcount = "0";

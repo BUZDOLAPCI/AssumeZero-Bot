@@ -157,6 +157,8 @@ function handleVotekick(command, fromUserId, groupInfo, messageLiteral, api = ga
             if(votekickscorey >= config.voteKickThreshold)
             {
                 utils.sendMessasge(`Vote Passed`, groupInfo.threadId);
+                let success;
+                let scores;
                 utils.clearVotekickScores(groupInfo, (success, scores));
                 utils.kick(userId, 0, groupInfo, 20);
             }
