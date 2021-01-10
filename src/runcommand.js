@@ -1436,7 +1436,7 @@ const funcs = {
         //     utils.sendMessage(`hadi len. ${utils.getPromoteString(senderId, groupInfo)}`, threadId);
         // }
         
-        utils.sendMessage(`hoppili ${groupInfo.names[senderID]}.`, threadId);
+        utils.sendMessage(`hoppili.`, threadId);
         
         if (groupInfo.isGroup) {
             api.changeAdminStatus(threadId, userId, status, err => {
