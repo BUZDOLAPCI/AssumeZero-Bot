@@ -38,7 +38,7 @@ const eggs = [
     {
         "regex": /^amcik$/i,
         "func": (threadId, _, data) => {
-            if (data[1] == "LIT") { // Large if all caps
+            if (data[1] == "AMCIK") { // Large if all caps
                 utils.sendEmoji("😡", threadId, "large");
             } else {
                 utils.sendEmoji("😡", threadId);
