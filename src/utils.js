@@ -982,6 +982,7 @@ exports.reactToMessage = (messageId, reaction = "like", api = gapi) => {
         "angry": "😠",
         "like": "👍",
         "see": "🧐",
+        "think": "🤔",
         "dislike": "👎"
     };
     api.setMessageReaction(reactions[reaction], messageId);
