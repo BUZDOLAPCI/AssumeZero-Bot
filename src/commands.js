@@ -507,7 +507,7 @@ exports.categories = {
                 "display_names": ["execute order 66", "order 66"],
                 "pretty_name": "Order 66",
                 "short_description": "Destroy group temporarily",
-                "description": `Every single group member, including your Socialpath Yiyi Kuang, is now an enemy of the group chat (for ${config.order66Time} seconds)`,
+                "description": `Every single group member is now an enemy of the group chat (for ${config.order66Time} seconds)`,
                 "syntax": "execute order 66",
                 "example": "",
                 "sudo": false,

@@ -284,7 +284,7 @@ exports.updateGroupInfo = (threadId, message, callback = () => { }, sendsInit = 
                         info.admins = data.adminIDs ? data.adminIDs.map(u => u["id"]) : [];
                         if (isNew) {
                             // These properties only need to be initialized once
-                            info.muted = true;
+                            info.muted = false;
                             info.playlists = {};
                             info.aliases = {};
                             info.pinned = {};
@@ -981,6 +981,7 @@ exports.reactToMessage = (messageId, reaction = "like", api = gapi) => {
         "sad": "😢",
         "angry": "😠",
         "like": "👍",
+        "see": "🧐",
         "dislike": "👎"
     };
     api.setMessageReaction(reactions[reaction], messageId);
