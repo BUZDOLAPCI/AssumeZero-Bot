@@ -36,6 +36,16 @@ const eggs = [
         "func": (threadId, messageId) => { utils.reactToMessage(messageId, "angry"); }
     },
     {
+        "regex": /^amcik$/i,
+        "func": (threadId, _, data) => {
+            if (data[1] == "LIT") { // Large if all caps
+                utils.sendEmoji("😡", threadId, "large");
+            } else {
+                utils.sendEmoji("😡", threadId);
+            }
+        }
+    },
+    {
         "regex": /^like$/i,
         "func": (threadId, messageId) => { utils.reactToMessage(messageId, "like"); }
     },
