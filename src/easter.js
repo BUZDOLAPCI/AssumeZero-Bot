@@ -74,6 +74,10 @@ const eggs = [
         "func": threadId => { utils.sendFile("../media/yapisal_reformlar.mp4", threadId); }
     },
     {
+        "regex": /ford focus mk2 stline/i,
+        "func": threadId => { utils.sendFile("../media/focusmk2.jpg", threadId); }
+    },
+    {
         "regex": /cs komik/i,
         "func": threadId => {
             utils.sendMessage({
