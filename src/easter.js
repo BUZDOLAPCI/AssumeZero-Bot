@@ -137,22 +137,22 @@ const eggs = [
             switch (groupInfo.tellmewhystate) {
                 case '0':
                     utils.sendMessage(`♪♫ Ain't nothing but a heartache ♫`, threadId);
-                    groupInfo.tellmewhystate = '1';
+                    utils.setGroupProperty("tellmewhystate", '1', curInfo);
                     break;
                 case '1':
                     utils.sendMessage(`♪♫ Ain't nothing but a mistake ♫`, threadId); 
-                    groupInfo.tellmewhystate = '2';
+                    utils.setGroupProperty("tellmewhystate", '2', curInfo);
                     break;
                 case '2':
                     utils.sendMessage(`♪♫ I never wanna hear you say ♫`, threadId); 
                     setTimeout(() => {
                         utils.sendMessage(`*♪♫ I want it that way ♫*`, threadId); 
                     }, 2000); // Make sure people see the message (and impending doom)
-                    groupInfo.tellmewhystate = '0';
+                    utils.setGroupProperty("tellmewhystate", '0', curInfo);
                     break;
                 default:
                     utils.sendMessage(`Sorry, we are out of Backstreet Boys.`, threadId);
-                    groupInfo.tellmewhystate = '0';
+                    utils.setGroupProperty("tellmewhystate", '0', curInfo);
                 }
         }
     },
