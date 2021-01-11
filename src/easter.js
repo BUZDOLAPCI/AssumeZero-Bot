@@ -82,6 +82,10 @@ const eggs = [
         "func": threadId => { utils.sendFile("../media/alcak_pust.mp4", threadId); }
     },
     {
+        "regex": /^(good boy|aferim|afferim|aferin|afferin)/i,
+        "func": (threadId, messageId) => { utils.reactToMessage(messageId, "like"); }
+    },
+    {
         "regex": /^(savunmadim|cikar goster)/i,
         "func": threadId => { utils.sendFile("../media/cikar_goster.mp4", threadId); }
     },
