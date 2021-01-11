@@ -82,7 +82,7 @@ const eggs = [
         "func": threadId => { utils.sendFile("../media/alcak_pust.mp4", threadId); }
     },
     {
-        "regex": /^([\h\H][\m\M]*)/i,
+        "regex": /^([\h][\m]+)/i,
         "func": (threadId, messageId) => { utils.reactToMessage(messageId, "think"); }
     },
     {
