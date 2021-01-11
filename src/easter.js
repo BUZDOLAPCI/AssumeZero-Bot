@@ -28,15 +28,15 @@ const eggs = [
         "func": threadId => { utils.sendFilesFromDir("../media/rte", threadId); }
     },
     {
-        "regex": /sad$/i,
+        "regex": /(\bsad\b)/i,
         "func": (threadId, messageId) => { utils.reactToMessage(messageId, "sad"); }
     },
     {
-        "regex": /^angry$/i,
+        "regex": /(\bangry\b)/i,
         "func": (threadId, messageId) => { utils.reactToMessage(messageId, "angry"); }
     },
     {
-        "regex": /amcik$/i,
+        "regex": /(\bamcik\b)/i,
         "func": (threadId, _, data) => {
             if (data[1] == "AMCIK") { // Large if all caps
                 utils.sendEmoji("😡", threadId, "large");
@@ -46,31 +46,23 @@ const eggs = [
         }
     },
     {
-        "regex": /^like$/i,
+        "regex": /(\blike\b)/i,
         "func": (threadId, messageId) => { utils.reactToMessage(messageId, "like"); }
     },
     {
-        "regex": /^dislike$/i,
+        "regex": /(\bdislike\b)/i,
         "func": (threadId, messageId) => { utils.reactToMessage(messageId, "dislike"); }
     },
     {
-        "regex": /^wow$/i,
+        "regex": /(\b(wow|wew)\b)/i,
         "func": (threadId, messageId) => { utils.reactToMessage(messageId, "wow"); }
     },
     {
-        "regex": /^wew$/i,
-        "func": (threadId, messageId) => { utils.reactToMessage(messageId, "wow"); }
-    },
-    {
-        "regex": /^lol$/i,
+        "regex": /(\b(lol|lel)\b)/i,
         "func": (threadId, messageId) => { utils.reactToMessage(messageId, "funny"); }
     },
     {
-        "regex": /^bakalim$/i,
-        "func": (threadId, messageId) => { utils.reactToMessage(messageId, "see"); }
-    },
-    {
-        "regex": /^bakacaz$/i,
+        "regex": /(\b(bakalim|bakacaz|bak)\b)/i,
         "func": (threadId, messageId) => { utils.reactToMessage(messageId, "see"); }
     },
     {
@@ -88,19 +80,19 @@ const eggs = [
         "func": threadId => { utils.sendFile("../media/yapisal_reformlar.mp4", threadId); }
     },
     {
-        "regex": /^(alcak|pust)/i,
+        "regex": /(\b(alcak|pust)\b)/i,
         "func": threadId => { utils.sendFile("../media/alcak_pust.mp4", threadId); }
     },
     {
-        "regex": /^([\h][\m]+)$/i,
+        "regex": /\b([\h][\m]+)\b/i,
         "func": (threadId, messageId) => { utils.reactToMessage(messageId, "think"); }
     },
     {
-        "regex": /^(good boy|aferim|afferim|aferin|afferin)/i,
+        "regex": /\b(good boy|aferim|afferim|aferin|afferin)\b/i,
         "func": (threadId, messageId) => { utils.reactToMessage(messageId, "like"); }
     },
     {
-        "regex": /^(savunmadim|cikar goster)/i,
+        "regex": /\b(savunmadim|cikar goster)\b/i,
         "func": threadId => { utils.sendFile("../media/cikar_goster.mp4", threadId); }
     },
     {
