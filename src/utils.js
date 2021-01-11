@@ -989,6 +989,12 @@ exports.reactToMessage = (messageId, reaction = "like", api = gapi) => {
     api.setMessageReaction(reactions[reaction], messageId);
 };
 
+// Allows the bot to react to a message given a message ID (from listen)
+// Possible reactions: 'love', 'funny', 'wow', 'sad', 'angry', 'like', and 'dislike'
+exports.reactToMessageSpesific = (messageId, reaction, api = gapi) => {
+    api.setMessageReaction(reaction, messageId);
+};
+
 /*
 Parses a given message and makes the necessary shortcut replacements, which currently include
 changing "me" to the current user and any aliases to the corresponding user based on the current
