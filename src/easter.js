@@ -66,6 +66,10 @@ const eggs = [
         "func": (threadId, messageId) => { utils.reactToMessageSpesific(messageId, "🤮"); }
     },
     {
+        "regex": /(\b(hayvan|animal)\b)/i,
+        "func": (threadId, messageId) => { utils.reactToMessageWithAnimal(messageId); }
+    },
+    {
         "regex": /(\b(bakalim|bakacaz|bak)\b)/i,
         "func": (threadId, messageId) => { utils.reactToMessage(messageId, "see"); }
     },

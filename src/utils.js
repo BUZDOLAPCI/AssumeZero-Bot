@@ -995,6 +995,47 @@ exports.reactToMessageSpesific = (messageId, reaction, api = gapi) => {
     api.setMessageReaction(reaction, messageId);
 };
 
+exports.reactToMessageWithAnimal = (messageId, reaction = "like", api = gapi) => {
+    const reactions = [
+        "🐕‍🦺",
+        "🐂",
+        "🦙",
+        "🐖",
+        "🐏",
+        "🐐",
+        "🐅",
+        "🦑",
+        "🐘",
+        "🐀",
+        "🐒",
+        "🐄",
+        "🦘",
+        "🐇",
+        "🐗",
+        "🐿️",
+        "🐕",
+        "🐈",
+        "🐴",
+        "🦄",
+        "🦓",
+        "🐮",
+        "🐃",
+        "🐷",
+        "🐪",
+        "🐫",
+        "🐻",
+        "🦃",
+        "🐓",
+        "🦅",
+        "🦢",
+        "🦆",
+        "🐢",
+        "🐳",
+        "🦀",
+        "🐍"
+    ];
+    api.setMessageReaction(reactions[Math.floor(Math.random() * reactions.length)], messageId);
+};
 /*
 Parses a given message and makes the necessary shortcut replacements, which currently include
 changing "me" to the current user and any aliases to the corresponding user based on the current
