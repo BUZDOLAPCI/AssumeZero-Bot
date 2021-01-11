@@ -50,7 +50,7 @@ exports.localSleepTime = 3;
 exports.localWakeTime = 9;
 
 // Your desired timezone for displaying times
-exports.timeZone = "America/New_York";
+exports.timeZone = "Europe/Istanbul";
 
 // Time in seconds to ban users for Order 66
 exports.order66Time = 15;
