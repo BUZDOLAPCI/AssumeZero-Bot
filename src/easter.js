@@ -132,6 +132,30 @@ const eggs = [
         "func": threadId => { utils.sendMessage(`¯\\_(ツ)_/¯`, threadId); }
     },
     {
+        "regex": /(tell me why)$/i,
+        "func": threadId => { 
+            switch (groupInfo.tellmewhystate) {
+                case '0':
+                    utils.sendMessage(`♪♫ Ain't nothing but a heartache ♫`, threadId);
+                    groupInfo.tellmewhystate = '1';
+                    break;
+                case '1':
+                    utils.sendMessage(`♪♫ Ain't nothing but a mistake ♫`, threadId); 
+                    groupInfo.tellmewhystate = '2';
+                    break;
+                case '2':
+                    utils.sendMessage(`♪♫ I never wanna hear you say ♫`, threadId); 
+                    setTimeout(() => {
+                        utils.sendMessage(`*♪♫ I want it that way ♫*`, threadId); 
+                    }, 2000); // Make sure people see the message (and impending doom)
+                    groupInfo.tellmewhystate = '0';
+                    break;
+                default:
+                  console.log(`Sorry, we are out of Backstreet Boys.`);
+                }
+        }
+    },
+    {
         "alt": message => { // Check whether the bot was mentioned
             const mentions = Object.keys(message.mentions || {});
             return (mentions && mentions.length && mentions.includes(config.bot.id));

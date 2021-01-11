@@ -285,6 +285,7 @@ exports.updateGroupInfo = (threadId, message, callback = () => { }, sendsInit = 
                         if (isNew) {
                             // These properties only need to be initialized once
                             info.muted = false;
+                            info.tellmewhystate = 0;
                             info.playlists = {};
                             info.aliases = {};
                             info.pinned = {};

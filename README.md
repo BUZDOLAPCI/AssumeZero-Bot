@@ -193,6 +193,8 @@ let groupInfo = {
     "admins": [string],
     // Whether the chat has Easter eggs muted (true by default)
     "muted": bool,
+    // Whether the chat has Easter eggs muted (true by default)
+    "tellmewhystate": string,
     // A map from user IDs to stored Spotify playlist objects, which have these props:
     // name, id, user, uri
     "playlists": {string: playlistObj},
