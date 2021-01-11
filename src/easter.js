@@ -28,7 +28,7 @@ const eggs = [
         "func": threadId => { utils.sendFilesFromDir("../media/rte", threadId); }
     },
     {
-        "regex": /^sad$/i,
+        "regex": /sad$/i,
         "func": (threadId, messageId) => { utils.reactToMessage(messageId, "sad"); }
     },
     {
