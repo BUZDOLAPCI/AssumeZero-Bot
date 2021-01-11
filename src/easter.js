@@ -74,11 +74,11 @@ const eggs = [
         "func": threadId => { utils.sendFile("../media/yapisal_reformlar.mp4", threadId); }
     },
     {
-        "regex": /(alcak|pust)/i,
+        "regex": /^(alcak|pust)/i,
         "func": threadId => { utils.sendFile("../media/alcak_pust.mp4", threadId); }
     },
     {
-        "regex": /(savunmadim|cikar goster)/i,
+        "regex": /^(savunmadim|cikar goster)/i,
         "func": threadId => { utils.sendFile("../media/cikar_goster.mp4", threadId); }
     },
     {
