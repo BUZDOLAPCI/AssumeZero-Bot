@@ -1077,7 +1077,7 @@ const funcs = {
         const url = cmatch[1];
         const overlay = cmatch[2];
         utils.processImage(url, attachments, groupInfo, (img, filename, path) => {
-            jimp.loadFont(jimp.FONT_SANS_32_BLACK, (err, font) => {
+            jimp.loadFont(jimp.FONT_SANS_32_WHITE, (err, font) => {
                 if (!err) {
                     const width = img.bitmap.width; // Image width
                     const height = img.bitmap.height; // Image height
