@@ -60,6 +60,10 @@ const eggs = [
         "func": (threadId, messageId) => { utils.reactToMessage(messageId, "see"); }
     },
     {
+        "regex": /^bakacaz$/i,
+        "func": (threadId, messageId) => { utils.reactToMessage(messageId, "see"); }
+    },
+    {
         "regex": /(?:\s|^)(lit)(?:[^A-z0-9]|$)/i,
         "func": (threadId, _, data) => {
             if (data[1] == "LIT") { // Large if all caps
