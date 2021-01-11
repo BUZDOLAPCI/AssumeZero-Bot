@@ -133,7 +133,7 @@ const eggs = [
     },
     {
         "regex": /(tell me why)$/i,
-        "func": threadId => { 
+        "func": (threadId, _, __, groupInfo) => { 
             switch (groupInfo.tellmewhystate) {
                 case '0':
                     utils.sendMessage(`♪♫ Ain't nothing but a heartache ♫`, threadId);
@@ -151,7 +151,8 @@ const eggs = [
                     groupInfo.tellmewhystate = '0';
                     break;
                 default:
-                  console.log(`Sorry, we are out of Backstreet Boys.`);
+                    utils.sendMessage(`Sorry, we are out of Backstreet Boys.`, threadId);
+                    groupInfo.tellmewhystate = '0';
                 }
         }
     },
