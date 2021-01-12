@@ -1251,7 +1251,7 @@ const funcs = {
                 const weather = data.weather[0];
                 const cur = data.main;
 
-                const msg = `Weather for ${name} (${country}):\nConditions: ${weather.description}\nTemp: ${cur.temp} ºF (L-${cur.temp_min} H-${cur.temp_max})\nCloud cover: ${data.clouds.all}%`;
+                const msg = `Weather for ${name} (${country}):\nConditions: ${weather.description}\nTemp: ${cur.temp} ºC (L-${cur.temp_min} H-${cur.temp_max})\nCloud cover: ${data.clouds.all}%`;
                 utils.sendFilesFromUrl(`http://openweathermap.org/img/w/${weather.icon}.png`, threadId, msg);
             } else {
                 utils.sendError("Couldn't retrieve weather for that location.", threadId);
