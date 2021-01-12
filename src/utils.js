@@ -114,6 +114,59 @@ exports.sendMessage = (m, threadId, callback = () => { }, replyId = null, api = 
     }
 };
 
+/*
+Wrapper function for sending messages easily
+Isn't that much simpler than the actual message function, but it
+allows for an optional thread parameter (default is currently stored ID)
+and for outputting messages to stdout when the API isn't available (e.g. before login)
+
+Accepts either a simple string or a message object with URL/attachment fields.
+
+Probably a good idea to use this wrapper for all sending instances for debug purposes
+and consistency.
+*/
+exports.voteUser = (votePoints, threadId, userId, groupInfo, senderId, api = gapi) => {
+    if (!m || !threadId) {
+        return callback(new Error("Must provide message and threadId."));
+    }
+
+    try 
+    {
+        let err;
+        const user = groupInfo.name[userId];
+        const sender = groupInfo.name[senderId];
+        const user_cap = user.substring(0, 1).toUpperCase() + user.substring(1);
+        const sender_cap = user.substring(0, 1).toUpperCase() + user.substring(1);
+        const getCallback = () => {
+            return (err, success, newScore) => {
+                if (success) {
+                    utils.sendMessage(`${user_cap}'s current score is now ${newScore}.`, threadId);
+                } else {
+                    utils.sendError("Score update failed.", threadId);
+                }
+            };
+        };
+        if (userId) {
+            var senderIsSelf = userId === senderId; 
+            if(senderIsSelf){
+                utils.sendMessage(`${sender_cap} reacted his own message. -5 Penalty applied.`, threadId);
+                utils.sendError(`hadi len. -5 Penalty applied.`, threadId);
+                // Downvote
+                utils.updateScoreExplicit(-5, userId, getCallback(false));
+            }
+            else {
+                // vote
+                utils.updateScoreExplicit(votePoints, userId, getCallback(true));
+            }
+        } else {
+            utils.sendError(`User ${user_cap} not found`, threadId);
+        }
+    } catch (e) { // For debug mode (API not available)
+        console.log(`${threadId}: ${m}`);
+        callback();
+    }
+};
+
 // Wrapper function for sending error messages to chat (uses sendMessage wrapper)
 exports.sendError = (m, threadId) => {
     this.sendMessage(`Error: ${m}`, threadId);
@@ -656,6 +709,26 @@ exports.updateScore = (isAdd, userId, callback) => {
     });
 };
 
+// Updates the user's score either by (if isAdd) increasing or (otherwise) decreasing
+// the user's score by the default value set in config, or 5 points if not set
+// Returns a callback with error, success, and a value equal to the user's new score
+exports.updateScoreExplicit = (votePoints, userId, callback) => {
+    this.getScore(userId, (err, val) => {
+        if (err) {
+            callback(err);
+        }
+        // Convert from buffer & grab current score (set 0 if it doesn't yet exist)
+        const score = val ? parseInt(val.toString()) : 0;
+
+        // Can be easily customized to accept a score parameter if so desired
+        const points = votePoints; // Default to five points
+        const newScore = score + points;
+        this.setScore(userId, `${newScore}`, (err, success) => {
+            callback(err, success, newScore);
+        });
+    });
+};
+
 exports.getAllScores = (groupInfo, callback = () => { }) => {
     const members = groupInfo.names;
     let results = [];
@@ -995,7 +1068,7 @@ exports.reactToMessageSpesific = (messageId, reaction, api = gapi) => {
     api.setMessageReaction(reaction, messageId);
 };
 
-exports.reactToMessageWithAnimal = (messageId, reaction = "like", api = gapi) => {
+exports.reactToMessageWithAnimal = (messageId, api = gapi) => {
     const reactions = [
         "🐕‍🦺",
         "🐂",

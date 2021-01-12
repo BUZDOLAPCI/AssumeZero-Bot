@@ -7,18 +7,34 @@ const utils = require("./utils");
 const config = require("./config");
 
 exports.handleReacts = (message, info, api) => {
-    if (message.senderID !== config.bot.id) {
-        return; // Don't handle reacts to other users' messages
-    }
-
     const react = message.reaction;
-    switch (react) {
-        case "👍":
-        case "👎":
-            return recordEventRSVP((react === "👍"), message, info, api);
-        case "❌":
-        case "🗑":
-            return api.unsendMessage(message.messageID);
+
+    // handle reacts to other users' messages
+    if (message.senderID !== config.bot.id) {
+        // handle reacts to other bot's messages
+        switch (react) {
+            case "👍":
+                return voteUser(5, message.threadID, message.senderID, info, message.userID , api);
+            case "❤️":
+                return voteUser(10, message.threadID, message.senderID, info, message.userID , api);
+            case "👎":
+                return voteUser(-5, message.threadID, message.senderID, info, message.userID , api);
+            case "😡":
+                return voteUser(-10, message.threadID, message.senderID, info, message.userID , api);
+        }
+        return;  
+    }
+    else
+    {
+        // handle reacts to bot's messages
+        switch (react) {
+            case "👍":
+            case "👎":
+                return recordEventRSVP((react === "👍"), message, info, api);
+            case "❌":
+            case "🗑":
+                return api.unsendMessage(message.messageID);
+        }
     }
 };
 
