@@ -899,7 +899,7 @@ const funcs = {
             }
         }
     },
-    "restart": (threadId, cmatch, groupInfo _, senderId) => {
+    "restart": (threadId, cmatch, groupInfo, _, senderId) => {
         var senderIsOwner = (config.owner.id === senderId);
         if(!senderIsOwner){
             utils.sendError(`hadi len.`, threadId);
