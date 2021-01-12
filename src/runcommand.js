@@ -849,7 +849,7 @@ const funcs = {
             utils.sendError(`User ${user_cap} not found`, threadId);
         }
     },
-    "score": (threadId, cmatch, groupInfo _, senderId) => {
+    "score": (threadId, cmatch, groupInfo, _, senderId) => {
         if (cmatch[1]) { // Display scoreboard
             utils.getAllScores(groupInfo, (success, scores) => {
                 if (success) {
