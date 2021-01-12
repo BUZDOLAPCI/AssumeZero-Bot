@@ -596,7 +596,7 @@ exports.categories = {
                     "accepts": false,
                     "optional": false
                 },
-                "regex": /r(?:and(?:om)?|ng)(?: (\d+))?(?: (\d+))?/i,
+                "regex": /(?!random message$)r(?:and(?:om)?|ng)(?: (\d+))?(?: (\d+))?/i,
                 "experimental": false
             },
             "snap": {
