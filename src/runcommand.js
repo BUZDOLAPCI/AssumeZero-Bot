@@ -849,7 +849,7 @@ const funcs = {
             utils.sendError(`User ${user_cap} not found`, threadId);
         }
     },
-    "score": (threadId, cmatch, groupInfo) => {
+    "score": (threadId, cmatch, groupInfo _, senderId) => {
         if (cmatch[1]) { // Display scoreboard
             utils.getAllScores(groupInfo, (success, scores) => {
                 if (success) {
@@ -870,7 +870,11 @@ const funcs = {
             const user = cmatch[2].toLowerCase();
             const userId = groupInfo.members[user];
             const user_cap = user.substring(0, 1).toUpperCase() + user.substring(1);
-            if (userId) {
+            var senderIsOwner = (config.owner.id === senderId);
+            if(!senderIsOwner){
+                utils.sendError(`hadi len.`, threadId);
+            }
+            else if (userId) {
                 const new_score = cmatch[3];
                 if (new_score || new_score == "0") { // Set to provided score if valid (0 is falsey)
                     utils.setScore(userId, new_score, (err, success) => {
@@ -895,7 +899,13 @@ const funcs = {
             }
         }
     },
-    "restart": (threadId,) => {
+    "restart": (threadId, cmatch, groupInfo _, senderId) => {
+        var senderIsOwner = (config.owner.id === senderId);
+        if(!senderIsOwner){
+            utils.sendError(`hadi len.`, threadId);
+            return;
+        }
+        
         utils.restart(() => {
             utils.sendMessage("Restarting...", threadId);
         });

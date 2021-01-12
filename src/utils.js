@@ -156,6 +156,9 @@ exports.voteUser = (votePoints, m, threadId, userId, groupInfo, senderId, api = 
             else {
                 // vote
                 this.updateScoreExplicit(votePoints, userId, getCallback(true));
+                setTimeout(() => {
+                    this.updateScoreExplicit(1, userId, getCallback(true)); 
+                }, 500); 
             }
         } else {
             this.sendError(`User ${user_cap} not found`, threadId);
