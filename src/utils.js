@@ -127,7 +127,7 @@ and consistency.
 */
 exports.voteUser = (votePoints, m, threadId, userId, groupInfo, senderId, api = gapi) => {
     if (!m || !threadId) {
-        return utils.sendError("Must provide message and threadId.", threadId);
+        return this.sendError("Must provide message and threadId.", threadId);
     }
 
     try 
@@ -140,30 +140,30 @@ exports.voteUser = (votePoints, m, threadId, userId, groupInfo, senderId, api = 
         const getCallback = () => {
             return (err, success, newScore) => {
                 if (success) {
-                    utils.sendMessage(`${user_cap}'s current score is now ${newScore}.`, threadId);
+                    this.sendMessage(`${user_cap}'s current score is now ${newScore}.`, threadId);
                 } else {
-                    utils.sendError("Score update failed.", threadId);
+                    this.sendError("Score update failed.", threadId);
                 }
             };
         };
         if (userId) {
             var senderIsSelf = userId === senderId; 
             if(senderIsSelf){
-                utils.sendMessage(`${sender_cap} reacted his own message. -5 Penalty applied.`, threadId);
-                utils.sendError(`hadi len. -5 Penalty applied.`, threadId);
+                this.sendMessage(`${sender_cap} reacted his own message. -5 Penalty applied.`, threadId);
+                this.sendError(`hadi len. -5 Penalty applied.`, threadId);
                 // Downvote
-                utils.updateScoreExplicit(-5, userId, getCallback(false));
+                this.updateScoreExplicit(-5, userId, getCallback(false));
             }
             else {
                 // vote
-                utils.updateScoreExplicit(votePoints, userId, getCallback(true));
+                this.updateScoreExplicit(votePoints, userId, getCallback(true));
             }
         } else {
-            utils.sendError(`User ${user_cap} not found`, threadId);
+            this.sendError(`User ${user_cap} not found`, threadId);
         }
     } catch (e) { // For debug mode (API not available)
         console.log(`${threadId}: ${m}`);
-        utils.sendError(e, threadId);
+        this.sendError(e, threadId);
     }
 };
 
