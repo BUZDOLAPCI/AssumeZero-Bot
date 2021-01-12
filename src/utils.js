@@ -127,7 +127,7 @@ and consistency.
 */
 exports.voteUser = (votePoints, m, threadId, userId, groupInfo, senderId, api = gapi) => {
     if (!m || !threadId) {
-        return callback(new Error("Must provide message and threadId."));
+        return utils.sendError("Must provide message and threadId.", threadId);
     }
 
     try 
@@ -163,7 +163,6 @@ exports.voteUser = (votePoints, m, threadId, userId, groupInfo, senderId, api = 
         }
     } catch (e) { // For debug mode (API not available)
         console.log(`${threadId}: ${m}`);
-        callback();
     }
 };
 
