@@ -125,7 +125,7 @@ Accepts either a simple string or a message object with URL/attachment fields.
 Probably a good idea to use this wrapper for all sending instances for debug purposes
 and consistency.
 */
-exports.voteUser = (votePoints, threadId, userId, groupInfo, senderId, api = gapi) => {
+exports.voteUser = (votePoints, m, threadId, userId, groupInfo, senderId, api = gapi) => {
     if (!m || !threadId) {
         return callback(new Error("Must provide message and threadId."));
     }

@@ -14,13 +14,13 @@ exports.handleReacts = (message, info, api) => {
         // handle reacts to other bot's messages
         switch (react) {
             case "👍":
-                return utils.voteUser(5, message.threadID, message.senderID, info, message.userID , api);
+                return utils.voteUser(5, message, message.threadID, message.senderID, info, message.userID , api);
             case "❤️":
-                return utils.voteUser(10, message.threadID, message.senderID, info, message.userID , api);
+                return utils.voteUser(10, message, message.threadID, message.senderID, info, message.userID , api);
             case "👎":
-                return utils.voteUser(-5, message.threadID, message.senderID, info, message.userID , api);
+                return utils.voteUser(-5, message, message.threadID, message.senderID, info, message.userID , api);
             case "😡":
-                return utils.voteUser(-10, message.threadID, message.senderID, info, message.userID , api);
+                return utils.voteUser(-10, message, message.threadID, message.senderID, info, message.userID , api);
         }
         return;  
     }
