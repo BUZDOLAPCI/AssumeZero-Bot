@@ -163,6 +163,7 @@ exports.voteUser = (votePoints, m, threadId, userId, groupInfo, senderId, api = 
         }
     } catch (e) { // For debug mode (API not available)
         console.log(`${threadId}: ${m}`);
+        utils.sendError(e, threadId);
     }
 };
 
