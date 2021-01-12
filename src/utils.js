@@ -157,7 +157,7 @@ exports.voteUser = (votePoints, m, threadId, userId, groupInfo, senderId, api = 
                 // vote
                 this.updateScoreExplicit(votePoints, userId, getCallback(true));
                 setTimeout(() => {
-                    this.updateScoreExplicit(1, userId, getCallback(true)); 
+                    this.updateScoreExplicit(1, senderId, getCallback(true)); 
                 }, 500); 
             }
         } else {
