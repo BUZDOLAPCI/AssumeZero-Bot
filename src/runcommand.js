@@ -870,20 +870,22 @@ const funcs = {
             const user = cmatch[2].toLowerCase();
             const userId = groupInfo.members[user];
             const user_cap = user.substring(0, 1).toUpperCase() + user.substring(1);
-            var senderIsOwner = (config.owner.id === senderId);
-            if(!senderIsOwner){
-                utils.sendError(`hadi len.`, threadId);
-            }
-            else if (userId) {
+            var senderIsOwner = (config.owner.id === senderId); if (userId) {
                 const new_score = cmatch[3];
                 if (new_score || new_score == "0") { // Set to provided score if valid (0 is falsey)
-                    utils.setScore(userId, new_score, (err, success) => {
-                        if (success) {
-                            utils.sendMessage(`${user_cap}'s score updated to ${new_score}.`, threadId);
-                        } else {
-                            utils.sendError(err, threadId);
-                        }
-                    });
+
+                    if (!senderIsOwner) {
+                        utils.sendError(`hadi len.`, threadId);
+                    }
+                    else {
+                        utils.setScore(userId, new_score, (err, success) => {
+                            if (success) {
+                                utils.sendMessage(`${user_cap}'s score updated to ${new_score}.`, threadId);
+                            } else {
+                                utils.sendError(err, threadId);
+                            }
+                        });
+                    }
                 } else { // No value provided; just display score
                     utils.getScore(`${userId}`, (err, val) => {
                         if (!err) {
