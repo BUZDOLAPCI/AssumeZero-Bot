@@ -133,10 +133,10 @@ exports.voteUser = (votePoints, m, threadId, userId, groupInfo, senderId, api = 
     try 
     {
         let err;
-        const user = groupInfo.name[userId];
-        const sender = groupInfo.name[senderId];
+        const user = groupInfo.names[userId];
+        const sender = groupInfo.names[senderId];
         const user_cap = user.substring(0, 1).toUpperCase() + user.substring(1);
-        const sender_cap = user.substring(0, 1).toUpperCase() + user.substring(1);
+        const sender_cap = sender.substring(0, 1).toUpperCase() + sender.substring(1);
         const getCallback = () => {
             return (err, success, newScore) => {
                 if (success) {
