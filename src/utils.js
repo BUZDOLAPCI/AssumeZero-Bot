@@ -140,7 +140,7 @@ exports.voteUser = (votePoints, m, threadId, userId, groupInfo, senderId, api = 
         const getCallback = () => {
             return (err, success, newScore) => {
                 if (success) {
-                    this.sendMessage(`${user_cap}'s current score is now ${newScore}.`, threadId);
+                    //this.sendMessage(`${user_cap}'s current score is now ${newScore}.`, threadId);
                 } else {
                     this.sendError("Score update failed.", threadId);
                 }
@@ -150,7 +150,6 @@ exports.voteUser = (votePoints, m, threadId, userId, groupInfo, senderId, api = 
             var senderIsSelf = userId === senderId; 
             if(senderIsSelf){
                 this.sendMessage(`${sender_cap} reacted his own message. -5 Penalty applied.`, threadId);
-                this.sendError(`hadi len. -5 Penalty applied.`, threadId);
                 // Downvote
                 this.updateScoreExplicit(-5, userId, getCallback(false));
             }

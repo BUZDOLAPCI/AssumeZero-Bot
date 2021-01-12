@@ -10,16 +10,21 @@ exports.handleReacts = (message, info, api) => {
     const react = message.reaction;
 
     // handle reacts to other users' messages
-    if (message.senderID !== config.bot.id) {
+    if (message.senderID !== config.bot.id && message.userID !== config.bot.id) {
         // handle reacts to other bot's messages
         switch (react) {
+            case "👌":
             case "👍":
                 return utils.voteUser(5, message, message.threadID, message.senderID, info, message.userID , api);
             case "❤️":
+            case "❤":
+            case "😍":
                 return utils.voteUser(10, message, message.threadID, message.senderID, info, message.userID , api);
             case "👎":
                 return utils.voteUser(-5, message, message.threadID, message.senderID, info, message.userID , api);
             case "😡":
+            case "😠":
+            case "🤬":
                 return utils.voteUser(-10, message, message.threadID, message.senderID, info, message.userID , api);
         }
         return;  
