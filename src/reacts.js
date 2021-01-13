@@ -15,13 +15,28 @@ exports.handleReacts = (message, info, api) => {
         switch (react) {
             case "😆":
             case "👍":
+            case "👍🏻":
+            case "👍🏼":
+            case "👍🏽":
+            case "👍🏾":
+            case "👍🏿":
                 return utils.voteUser(5, message, message.threadID, message.senderID, info, message.userID , api);
             case "👌":
+            case "👌🏻":
+            case "👌🏼":
+            case "👌🏽":
+            case "👌🏾":
+            case "👌🏿":
             case "❤️":
             case "❤":
             case "😍":
                 return utils.voteUser(10, message, message.threadID, message.senderID, info, message.userID , api);
             case "👎":
+            case "👎🏻":
+            case "👎🏼":
+            case "👎🏽":
+            case "👎🏾":
+            case "👎🏿":
                 return utils.voteUser(-5, message, message.threadID, message.senderID, info, message.userID , api);
             case "😡":
             case "😠":
