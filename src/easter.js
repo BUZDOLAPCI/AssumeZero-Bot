@@ -29,7 +29,7 @@ const eggs = [
     },
     {
         "regex": /(\b(rte|tayyip|erdogan|akp|akepe)\b)/i,
-        "func": threadId => { utils.sendFilesFromDir("../media/rte", threadId); }
+        "func": threadId => { utils.sendRandomFileFromDir("../media/rte", threadId); }
     },
     {
         "regex": /(\bsad\b)/i,
