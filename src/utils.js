@@ -865,8 +865,8 @@ exports.sendFilesFromDir = (dir, threadId) => {
 exports.sendRandomFileFromDir = (dir, threadId) => {
     fs.readdir(`${__dirname}/${dir}`, (err, filenames) => {
         if (!err) {
-            var fileName = filenames[Math.floor(Math.random() * filenames.length)];
-            var filePath = `${dir}/${fileName}`;
+            const fileName = filenames[Math.floor(Math.random() * filenames.length)];
+            const filePath = `${dir}/${fileName}`;
             this.sendFile(filePath, threadId);
         } else {
             console.log(err);
