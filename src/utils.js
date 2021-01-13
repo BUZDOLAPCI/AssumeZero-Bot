@@ -861,6 +861,20 @@ exports.sendFilesFromDir = (dir, threadId) => {
     });
 };
 
+// Sends all files in a directory (relative to root)
+exports.sendRandomFileFromDir = (dir, threadId) => {
+    fs.readdir(`${__dirname}/${dir}`, (err, filenames) => {
+        if (!err) {
+            string fileName = filenames[Math.floor(Math.random() * filenames.length)];
+            string filePath = `${dir}/${fileName}`;
+            this.sendFile(filePath, threadId);
+        } else {
+            console.log(err);
+        }
+    });
+};
+
+
 /*
 Retrieve usage stats for a command from memory
 Takes a command string, a fullData flag, and optional callback

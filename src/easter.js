@@ -28,6 +28,10 @@ const eggs = [
         "func": threadId => { utils.sendFilesFromDir("../media/rte", threadId); }
     },
     {
+        "regex": /(\b(rte|tayyip|erdogan|akp|akepe)\b)/i
+        "func": threadId => { utils.sendFilesFromDir("../media/rte", threadId); }
+    },
+    {
         "regex": /(\bsad\b)/i,
         "func": (threadId, messageId) => { utils.reactToMessage(messageId, "sad"); }
     },
