@@ -28,7 +28,7 @@ const eggs = [
         "func": threadId => { utils.sendFilesFromDir("../media/rte", threadId); }
     },
     {
-        "regex": /(\b(rte|tayyip|erdogan|akp|akepe)\b)/i,
+        "regex": /(\b(rte|tayyip|reis|erdogan|akp|akepe)\b)/i,
         "func": threadId => { utils.sendRandomFileFromDir("../media/rte", threadId); }
     },
     {
@@ -40,7 +40,7 @@ const eggs = [
         "func": (threadId, messageId) => { utils.reactToMessage(messageId, "angry"); }
     },
     {
-        "regex": /(\bamcik\b)/i,
+        "regex": /(\b(amcık|amcik)\b)/i,
         "func": (threadId, _, data) => {
             if (data[1] == "AMCIK") { // Large if all caps
                 utils.sendEmoji("😡", threadId, "large");
@@ -74,7 +74,7 @@ const eggs = [
         "func": (threadId, messageId) => { utils.reactToMessageWithAnimal(messageId); }
     },
     {
-        "regex": /(\b(bakalim|bakacaz|bak)\b)/i,
+        "regex": /(\b(bakalim|bakalım|bakacaz|bak)\b)/i,
         "func": (threadId, messageId) => { utils.reactToMessage(messageId, "see"); }
     },
     {
@@ -92,7 +92,7 @@ const eggs = [
         "func": threadId => { utils.sendFile("../media/yapisal_reformlar.mp4", threadId); }
     },
     {
-        "regex": /(\b(alcak|pust)\b)/i,
+        "regex": /(\b(alcak|pust|alçak|puşt)\b)/i,
         "func": threadId => { utils.sendFile("../media/alcak_pust.mp4", threadId); }
     },
     {
@@ -104,7 +104,7 @@ const eggs = [
         "func": (threadId, messageId) => { utils.reactToMessage(messageId, "like"); }
     },
     {
-        "regex": /\b(savunmadim|cikar goster)\b/i,
+        "regex": /\b(savunmadim|cikar goster|savunmadım|çıkar göster)\b/i,
         "func": threadId => { utils.sendFile("../media/cikar_goster.mp4", threadId); }
     },
     {
