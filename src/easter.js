@@ -28,8 +28,12 @@ const eggs = [
         "func": threadId => { utils.sendFilesFromDir("../media/rte", threadId); }
     },
     {
-        "regex": /(\b(rte|tayyip|reis|erdogan|akp|akepe|akape|reiz|reyiz|reyis)\b)/i,
+        "regex": /(\b(rte|tayyip|reis|erdogan|recep|erdoğan|akp|akepe|akape|reiz|reyiz|reyis)\b)/i,
         "func": threadId => { utils.sendRandomFileFromDir("../media/rte", threadId); }
+    },
+    {
+        "regex": /(\b(mevlana|mesnevi|fifi|mafihi|filozof|ne olursan ol|tasavvuf|konya|rumi|hosgoru|hoşgörü)\b)/i,
+        "func": threadId => { utils.sendRandomFileFromDir("../media/mevlana", threadId); }
     },
     {
         "regex": /(\bsad\b)/i,
