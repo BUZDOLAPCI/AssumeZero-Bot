@@ -28,7 +28,7 @@ const eggs = [
         "func": threadId => { utils.sendFilesFromDir("../media/rte", threadId); }
     },
     {
-        "regex": /(\b(rte|tayyip|reis|erdogan|akp|akepe)\b)/i,
+        "regex": /(\b(rte|tayyip|reis|erdogan|akp|akepe|akape|reiz|reyiz|reyis)\b)/i,
         "func": threadId => { utils.sendRandomFileFromDir("../media/rte", threadId); }
     },
     {
