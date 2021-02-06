@@ -1466,11 +1466,11 @@ const funcs = {
         while (!match && i < provinces.length) {
             const province = provinces[i];
             const name = province.il_adi;
+            const nameEn = utils.turkceKarakterOmit(name);
             const code = province.plaka_kodu;
 
             const matcher = new RegExp(query, "i");
-            const matcherTr = new RegExp(utils.turkceKarakterOmit(query), "i");
-            if (name.match(matcher) || name.match(matcherTr)) {
+            if (name.match(matcher) || nameEn.match(matcher)) {
                 match = province;
                 codeMatched = false;
             }
