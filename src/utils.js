@@ -1229,7 +1229,7 @@ exports.turkceKarakterOmit = tr_str => {
     str_array = str.split('');
 
     for(var i=0, len = str_array.length; i < len; i++) {
-        str_array[i] = charMap[ str_array[i] ] || str_array[i];
+        str_array[i] = trCharMap[ str_array[i] ] || str_array[i];
     }
 
     str = str_array.join('');
