@@ -1484,11 +1484,11 @@ const funcs = {
         if (match) {
             if(codeMatched)
             {
-                utils.sendMessage(`${match.il_adi}.`, threadId);
+                utils.sendMessage(`${match.il_adi} ☚(-.-☚)`, threadId);
             }
             else
             {
-                utils.sendMessage(`${match.plaka_kodu}.`, threadId);
+                utils.sendMessage(`${match.plaka_kodu} ☚(-.-☚)`, threadId);
             }
         } else {
             utils.sendError("No such province found.", threadId);
