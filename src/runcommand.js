@@ -1457,43 +1457,42 @@ const funcs = {
     "plaka": (threadId, cmatch) => {
         const query = cmatch[1];
 
-        var request = new XMLHttpRequest();
-        request.open("GET", "../data/il-ilce.json", false);
-        request.send(null)
-        const provinces = JSON.parse(request.responseText);
-        let match;
-        let i = 0;
-        let codeMatched = false;
-        while (!match && i < provinces.length) {
-            const province = provinces[i];
-            const name = province.il_adi;
-            const code = province.plaka_kodu;
+        $.getJSON('../data/il-ilce.json', function(data) { 
+            const provinces = data;
+            let match;
+            let i = 0;
+            let codeMatched = false;
+            while (!match && i < provinces.length) {
+                const province = provinces[i];
+                const name = province.il_adi;
+                const code = province.plaka_kodu;
 
-            const matcher = new RegExp(query, "i");
-            const matcherTr = new RegExp(utils.turkceKarakterOmit(query), "i");
-            if (name.match(matcher) || name.match(matcherTr)) {
-                match = build;
-                codeMatched = false;
+                const matcher = new RegExp(query, "i");
+                const matcherTr = new RegExp(utils.turkceKarakterOmit(query), "i");
+                if (name.match(matcher) || name.match(matcherTr)) {
+                    match = build;
+                    codeMatched = false;
+                }
+                if (code.match(matcher)) {
+                    match = build;
+                    codeMatched = true;
+                }
+                i++;
             }
-            if (code.match(matcher)) {
-                match = build;
-                codeMatched = true;
-            }
-            i++;
-        }
 
-        if (match) {
-            if(codeMatched)
-            {
-                utils.sendMessage(`${match.il_adi}.`, threadId);
+            if (match) {
+                if(codeMatched)
+                {
+                    utils.sendMessage(`${match.il_adi}.`, threadId);
+                }
+                else
+                {
+                    utils.sendMessage(`${match.plaka_kodu}.`, threadId);
+                }
+            } else {
+                utils.sendError("No such province found.", threadId);
             }
-            else
-            {
-                utils.sendMessage(`${match.plaka_kodu}.`, threadId);
-            }
-        } else {
-            utils.sendError("No such province found.", threadId);
-        }
+        });
     },
     "admin": (threadId, cmatch, groupInfo, api, senderId) => {
         const status = cmatch[1] ? false : true;
