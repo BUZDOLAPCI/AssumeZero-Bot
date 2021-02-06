@@ -1456,8 +1456,11 @@ const funcs = {
     },
     "plaka": (threadId, cmatch) => {
         const query = cmatch[1];
-        
-        const provinces = JSON.parse(utils.getJsonPathFromDataDir("il-ilce.json"));
+
+        var request = new XMLHttpRequest();
+        request.open("GET", "../data/il-ilce.json", false);
+        request.send(null)
+        const provinces = JSON.parse(request.responseText);
         let match;
         let i = 0;
         let codeMatched = false;
