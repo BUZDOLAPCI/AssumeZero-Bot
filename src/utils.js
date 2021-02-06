@@ -877,10 +877,10 @@ exports.sendRandomFileFromDir = (dir, threadId) => {
 };
 
 // get json file from data dir
-exports.getJsonPathFromDataDir = (fileName) => {
-    const dir = "../data";
-    const filePath = `${dir}/${fileName}`;
-    return filePath;
+exports.parseJsonFromFile = (filePath) => {
+    let rawdata = fs.readFileSync(`${__dirname}/${filePath}`);
+    const data = JSON.parse(rawdata);
+    return data;
 };
 
 

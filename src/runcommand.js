@@ -1457,8 +1457,7 @@ const funcs = {
     "plaka": (threadId, cmatch) => {
         const query = cmatch[1];
 
-        let rawdata = fs.readFileSync('../data/il-ilce.json');
-        const data = JSON.parse(rawdata);
+        let data = fs.parseJsonFromFile('../data/il-ilce.json');
         
         const provinces = data;
         let match;
