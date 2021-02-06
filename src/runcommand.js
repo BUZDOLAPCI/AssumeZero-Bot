@@ -1471,11 +1471,11 @@ const funcs = {
             const matcher = new RegExp(query, "i");
             const matcherTr = new RegExp(utils.turkceKarakterOmit(query), "i");
             if (name.match(matcher) || name.match(matcherTr)) {
-                match = build;
+                match = province;
                 codeMatched = false;
             }
             if (code.match(matcher)) {
-                match = build;
+                match = province;
                 codeMatched = true;
             }
             i++;
