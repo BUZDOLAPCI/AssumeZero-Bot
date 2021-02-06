@@ -1008,6 +1008,22 @@ exports.categories = {
                 "regex": /whereis (.+)/i,
                 "experimental": false
             },
+            "plaka": {
+                "display_names": ["plaka"],
+                "pretty_name": "Plaka",
+                "short_description": "Query plakas for provinces",
+                "description": "Query plakas for provinces",
+                "syntax": "plaka {province name or plaka}",
+                "example": "plaka Adana",
+                "sudo": false,
+                "attachments": false,
+                "user_input": {
+                    "accepts": false,
+                    "optional": false
+                },
+                "regex": /plaka (.+)/i,
+                "experimental": false
+            },
             "findbus": {
                 "display_names": ["findbus"],
                 "pretty_name": "Find Bus",

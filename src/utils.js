@@ -10,6 +10,8 @@ const config = require("./config");
 const utils = require("./configutils");
 const commands = require("./commands");
 
+var trCharMap = {Ç:'C',Ö:'O',Ş:'S',İ:'I',I:'i',Ü:'U',Ğ:'G',ç:'c',ö:'o',ş:'s',ı:'i',ü:'u',ğ:'g'};
+
 let gapi;
 let mem;
 let credentials;
@@ -874,6 +876,13 @@ exports.sendRandomFileFromDir = (dir, threadId) => {
     });
 };
 
+// get json file from data dir
+exports.getJsonPathFromDataDir = (fileName) => {
+    const dir = "../data";
+    const filePath = `${dir}/${fileName}`;
+    return filePath;
+};
+
 
 /*
 Retrieve usage stats for a command from memory
@@ -1213,6 +1222,18 @@ exports.addPin = (msg, pinName, date, sender, groupInfo) => {
 exports.stringifyPin = pin => {
     const dateStr = this.getPrettyDateString(new Date(pin.date), false);
     return `"${pin.msg}" – ${pin.sender} on ${dateStr}`;
+};
+
+exports.turkceKarakterOmit = tr_str => {
+    var str = tr_str;
+    str_array = str.split('');
+
+    for(var i=0, len = str_array.length; i < len; i++) {
+        str_array[i] = charMap[ str_array[i] ] || str_array[i];
+    }
+
+    str = str_array.join('');
+    return str;
 };
 
 exports.appendPin = (content, existing, date, sender, groupInfo) => {
