@@ -32,7 +32,7 @@ const eggs = [
         "func": threadId => { utils.sendRandomFileFromDir("../media/rte", threadId); }
     },
     {
-        "regex": /(\b(mevlana|mesnevi|fifi|mafihi|filozof|ne olursan ol|tasavvuf|konya|rumi|şems|hosgoru|hoşgörü)\b)/i,
+        "regex": /(\b(mevlana|mesnevi|fifi|mafihi|filozof|ne olursan ol|tasavvuf|konya|rumi|şems|hosgoru|hoşgörü))/i,
         "func": threadId => { utils.sendRandomFileFromDir("../media/mevlana", threadId); }
     },
     {
