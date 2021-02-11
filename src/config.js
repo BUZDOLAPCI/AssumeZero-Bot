@@ -13,10 +13,10 @@ exports.owner = {
 // Bot information
 exports.bot = {
     "names": {
-        "short": "LPM Peacekeeper", // Will be used as 'nickname' in chat (remove if same as account name)
-        "long": "Lpm-PeaceKeeper Dredd" // Name displayed in profile on bot's Facebook account
+        "short": "LPM Peacekeeper 2.0", // Will be used as 'nickname' in chat (remove if same as account name)
+        "long": "Lpm-PeacekeeperSaiyan Dredd" // Name displayed in profile on bot's Facebook account
     },
-    "id": "100061756899896" // Bot's ID (for security purposes in commands)
+    "id": "100063549400917" // Bot's ID (for security purposes in commands)
 };
 
 // Location of the bot repo if automatic GitHub webhook deploys are used
