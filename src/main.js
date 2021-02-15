@@ -75,6 +75,7 @@ function handleMessage(err, message, external = false, api = gapi) { // New mess
         utils.getGroupInfo(message.threadID, (err, info) => {
             if (err || !info) {
                 console.log(`Error retrieving group data for ${message.threadID}: ${err}`);
+                process.exit(696931);
             } else {
                 // Welcome new members
                 if (message.logMessageType && message.logMessageType == "log:subscribe") {
