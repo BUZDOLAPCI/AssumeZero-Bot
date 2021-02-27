@@ -5,6 +5,8 @@ const chrono = require("chrono-node"); // For NL date parsing
 const entities = new (require('html-entities').XmlEntities)(); // For parsing HTML strings
 const humanize = require("humanize-duration"); // For creating readable time durations
 const rss = new (require("rss-parser"))(); // For parsing RSS feeds
+const { Octokit } = require("@octokit/rest"); // For interacting with GitHub
+const { createAppAuth } = require("@octokit/auth-app"); // For authorizing Octokit
 
 const config = require("./config");
 const utils = require("./configutils");
@@ -16,6 +18,29 @@ let gapi;
 let mem;
 let credentials;
 let lockedThreads = [];
+let octokitInit;
+
+// We have to lazily initialize octokit because it requires credentials, which won't
+// be initialized until after this file is loaded into memory. Instead of creating
+// a function that initializes and returns an instance every time, we can initialize
+// it once and cache its value for subsequent calls.
+const getOctokit = () => {
+    return octokitInit ? octokitInit
+        : (() => {
+            octokitInit = new Octokit({
+                authStrategy: createAppAuth,
+                auth: {
+                    appId: credentials.GITHUB_APP_ID,
+                    privateKey: credentials.GITHUB_PRIVATE_KEY,
+                    installationId: credentials.GITHUB_INSTALLATION_ID,
+                    clientId: credentials.GITHUB_CLIENT_ID,
+                    clientSecret: credentials.GITHUB_CLIENT_SECRET
+                }
+            });
+
+            return octokitInit;
+        })();
+};
 
 // Initialize the global variables in this module
 // MUST be called before other functions in this module
@@ -557,31 +582,6 @@ exports.getPrettyDateString = (date, withTime = true) => {
     }
 
     return date.toLocaleString('en-US', options);
-};
-
-/*
-Creates a description for a user search result given the match's data from the chat API
-Also performs a Graph API search for a high-res version of the user's profile picture
-and uploads it with the description if it finds one
-Optional parameter to specify which level of match it is (1st, 2nd, 3rd, etc.)
-*/
-exports.searchForUser = (match, threadId, num = 0) => {
-    const desc = `${(num === 0) ? "Best match" : "Match " + (num + 1)}: ${match.name}\n${match.profileUrl}\nRank: ${match.score}\nUser ID: ${match.userID}`;
-
-    // Try to get large propic URL from Facebook Graph API using user ID
-    // If propic exists, combine it with the description
-    const userId = match.userID;
-    const graphUrl = `https://graph.facebook.com/${userId}/picture?type=large&redirect=false&width=400&height=400`;
-    request.get(graphUrl, (err, res, body) => {
-        if (!err && res.statusCode == 200) {
-            const url = JSON.parse(body).data.url; // Photo URL from Graph API
-            if (url) {
-                this.sendFilesFromUrl(url, threadId, desc);
-            } else {
-                this.sendMessage(desc, threadId);
-            }
-        }
-    });
 };
 
 /*
@@ -1261,6 +1261,25 @@ exports.appendPin = (content, existing, date, sender, groupInfo) => {
     }
 };
 
+exports.getEventTimeMetadata = (date) => {
+    const now = new Date();
+
+    const eventTime = date.getTime();
+    const prettyTime = this.getPrettyDateString(date);
+
+    let earlyReminderTime = new Date(date.getTime() - (config.reminderTime * 60000));
+    if (earlyReminderTime <= now) {
+        // Too late to give an early reminder
+        earlyReminderTime = null;
+    }
+
+    return {
+        eventTime,
+        prettyTime,
+        earlyReminderTime
+    };
+};
+
 // Adds an event to the chat
 exports.addEvent = (title, at, sender, groupInfo, threadId) => {
     const keyTitle = title.trim().toLowerCase();
@@ -1272,16 +1291,14 @@ exports.addEvent = (title, at, sender, groupInfo, threadId) => {
     const now = new Date();
     const timestamp = chrono.parseDate(at, now, { 'forwardDate': true });
     if (timestamp) {
-        const prettyTime = this.getPrettyDateString(timestamp);
+        const { eventTime, prettyTime, earlyReminderTime } = this.getEventTimeMetadata(timestamp);
         let msg = `
 Event "${title}" created for ${prettyTime}. To RSVP, upvote or downvote this message. \
 To delete this event, use "${config.trigger} event delete ${title}" (only the owner can do this). \
 \n\nI'll remind you at the time of the event`;
 
-        let earlyReminderTime = new Date(timestamp.getTime() - (config.reminderTime * 60000));
-        if (earlyReminderTime <= now) {
+        if (!earlyReminderTime) {
             // Too late to give an early reminder
-            earlyReminderTime = null;
             msg += ".";
         } else {
             msg += `, and ${config.reminderTime} minutes early.`;
@@ -1294,14 +1311,15 @@ To delete this event, use "${config.trigger} event delete ${title}" (only the ow
                     "type": "event",
                     "title": title,
                     "key_title": keyTitle,
-                    "timestamp": timestamp.getTime(),
+                    "timestamp": eventTime,
                     "owner": sender,
                     "threadId": threadId,
                     "pretty_time": prettyTime,
                     "remind_time": earlyReminderTime,
                     "mid": mid.messageID,
                     "going": [],
-                    "not_going": []
+                    "not_going": [],
+                    "repeats_every": 0
                 };
 
                 groupInfo.events[keyTitle] = event;
@@ -1344,7 +1362,16 @@ exports.listEvents = (rawTitle, groupInfo, threadId) => {
         if (event) {
             const goList = event.going.map(u => u.name);
             const notGoList = event.not_going.map(u => u.name);
-            let msg = `*${event.title}*\n_${event.pretty_time}_\n`;
+            let msg = `*${event.title}*\n_${event.pretty_time}_`;
+
+            if (event.repeats_every) {
+                const interval = nameForInterval(event.repeats_every);
+                if (interval) {
+                    msg += ` (repeats ${interval})`;
+                }
+            }
+            msg += '\n';
+
             if (goList.length > 0) {
                 msg += `Going: ${goList.join('/')}\n`;
             }
@@ -1352,6 +1379,7 @@ exports.listEvents = (rawTitle, groupInfo, threadId) => {
                 msg += `Not going: ${notGoList.join('/')}\n`;
             }
             msg += "\nTo RSVP, upvote or downvote the original event message linked above.";
+
             this.sendMessage(msg, threadId, () => { }, event.mid);
         } else {
             this.sendError(`Couldn't find an event called ${rawTitle}.`, threadId);
@@ -1383,6 +1411,66 @@ exports.listEvents = (rawTitle, groupInfo, threadId) => {
             this.sendMessage("There are no events set in this chat.", threadId);
         }
     }
+};
+
+exports.prettyList = (list, separator = "and") => {
+    let total = list.length;
+    let msg = '';
+
+    list.forEach((item, i) => {
+        if (i < total - 1 || total == 1) {
+            msg += item;
+            if (total > 2) {
+                msg += ", ";
+            } else {
+                msg += " ";
+            }
+        } else {
+            msg += `${separator} ${item}`;
+        }
+    });
+
+    return msg;
+};
+
+const DAY = 60 * 60 * 24 * 1000; // Day in milliseconds
+const intervalLengths = {
+    "daily": DAY,
+    "weekly": 7 * DAY,
+    "monthly": 30 * DAY,
+    "yearly": 365 * DAY,
+    "never": null
+};
+const acceptedIntervals = Object.keys(intervalLengths);
+const nameForInterval = (interval) => {
+    for (let i = 0; i < acceptedIntervals.length; i++) {
+        const name = acceptedIntervals[i];
+        if (intervalLengths[name] === interval) {
+            return name;
+        }
+    }
+    return null;
+};
+
+exports.repeatEvent = (rawInterval, eventID, groupInfo, threadId) => {
+    const interval = rawInterval.toLowerCase().trim();
+    const length = intervalLengths[interval];
+    if (length === undefined) {
+        this.sendError(`Unrecognized interval "${rawInterval}"; try ${this.prettyList(acceptedIntervals, "or")}.`, threadId);
+        return;
+    }
+
+    const eventName = Object.keys(groupInfo.events).find(name => groupInfo.events[name].mid === eventID);
+    if (!eventName) {
+        this.sendError("Couldn't find an event associated with that message. Try finding the original event confirmation.", threadId);
+        return;
+    }
+
+    groupInfo.events[eventName].repeats_every = length;
+    this.setGroupPropertyAndHandleErrors("events", groupInfo,
+        "Failed to update that event; please try again.",
+        `Successfully updated the event; it will now repeat ${interval}. ${length ? `To stop repeating, use "${config.trigger} event repeat never".` : ''}`
+    );
 };
 
 // Add a reminder to the chat
@@ -1464,14 +1552,18 @@ exports.getCovidData = (rawType, rawQuery, threadId) => {
         return msg;
     }
 
+    function getDateKey(date) {
+        return `${date.getMonth() + 1}/${date.getDate()}/${`${date.getFullYear()}`.slice(-2)}`;
+    }
+
     function getYesterdayNumbers(hist) {
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
         const twoDaysAgo = new Date();
         twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
 
-        const yKey = `${yesterday.getMonth() + 1}/${yesterday.getDate()}/${`${yesterday.getFullYear()}`.slice(-2)}`;
-        const twoKey = `${twoDaysAgo.getMonth() + 1}/${twoDaysAgo.getDate()}/${`${twoDaysAgo.getFullYear()}`.slice(-2)}`;
+        const yKey = getDateKey(yesterday);
+        const twoKey = getDateKey(twoDaysAgo);
 
         const yCases = hist.cases[yKey] ? hist.cases[yKey] : -1;
         const twoCases = hist.cases[twoKey] ? hist.cases[twoKey] : -1;
@@ -1504,11 +1596,30 @@ exports.getCovidData = (rawType, rawQuery, threadId) => {
         return msg;
     }
 
-    function buildTodayStr(cur, hist) {
+    function getVaccString(vhist) {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const twoDaysAgo = new Date();
+        twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+
+        const yKey = getDateKey(yesterday);
+        const twoKey = getDateKey(twoDaysAgo);
+
+        const yVacc = vhist[yKey] ? vhist[yKey] : -1;
+        const twoVacc = vhist[twoKey] ? vhist[twoKey] : -1;
+
+        const yVaccStr = yVacc >= 0 ? `\nVaccinations yesterday: ${(yVacc - twoVacc).toLocaleString()}` : "";
+
+        return yVaccStr > 0 ? `${yVaccStr}\n\n` : "";
+    }
+
+    function buildTodayStr(cur, hist, vhist) {
         const [yCasesStr, yDeathsStr] = getYesterdayNumbers(hist);
+        const vaccString = getVaccString(vhist);
 
         let msg = `New cases today: ${cur.todayCases.toLocaleString()}${yCasesStr}\nTotal cases: ${cur.cases.toLocaleString()}\n\n`;
         msg += `Deaths today: ${cur.todayDeaths.toLocaleString()}${yDeathsStr}\nTotal deaths: ${cur.deaths.toLocaleString()}\n\n`;
+        msg += vaccString;
         msg += `Total recovered: ${cur.recovered.toLocaleString()}`;
 
         return msg;
@@ -1631,21 +1742,27 @@ exports.getCovidData = (rawType, rawQuery, threadId) => {
                 }
 
                 if (query == "all") {
-                    request.get("https://corona.lmao.ninja/v2/all", {}, (err, _, all) => {
+                    request.get("https://disease.sh/v3/covid-19/all", {}, (err, _, all) => {
                         if (!err) {
                             const cdata = JSON.parse(all);
-                            const msg = `*Today's worldwide summary*\n\n${buildTodayStr(cdata, hdata)}`;
-                            this.sendMessage(msg, threadId);
+                            request.get("https://disease.sh/v3/covid-19/vaccine/coverage", (err, _, data) => {
+                                const vdata = err ? {} : JSON.parse(data);
+                                const msg = `*Today's worldwide summary*\n\n${buildTodayStr(cdata, hdata, vdata)}`;
+                                this.sendMessage(msg, threadId);
+                            });
                         } else {
                             this.sendError("Couldn't retrieve data.", threadId);
                         }
                     });
                 } else {
-                    request.get(`https://corona.lmao.ninja/v2/countries/${query}`, {}, (err, _, data) => {
+                    request.get(`https://disease.sh/v3/covid-19/countries/${query}`, {}, (err, _, data) => {
                         if (!err) {
                             const cdata = JSON.parse(data);
-                            const msg = `*Today's summary for ${cdata.country}*\n\n${buildTodayStr(cdata, hdata["timeline"])}`;
-                            this.sendMessage(msg, threadId);
+                            request.get(`https://disease.sh/v3/covid-19/vaccine/coverage/countries/${query}`, (err, _, data) => {
+                                const vdata = err ? { "timeline": {} } : JSON.parse(data);
+                                const msg = `*Today's summary for ${cdata.country}*\n\n${buildTodayStr(cdata, hdata["timeline"], vdata["timeline"])}`;
+                                this.sendMessage(msg, threadId);
+                            });
                         } else {
                             this.sendError("Couldn't retrieve data.", threadId);
                         }
@@ -1667,12 +1784,10 @@ exports.getCovidData = (rawType, rawQuery, threadId) => {
                         const matches = [];
                         for (let i = 0; i < data.data.length; i++) {
                             const info = data.data[i];
+                            const fields = [info.candidate, info.trialPhase, info.institutions, info.sponsors].flat();
                             // Naive substring search
-                            if (info.candidate.toLowerCase().indexOf(query) > -1
-                                || info.trialPhase.toLowerCase() == query
-                                || info.funding.filter(s => s.toLowerCase().indexOf(query) > -1).length > 0
-                                || info.institutions.filter(s => s.toLowerCase().indexOf(query) > -1).length > 0
-                                || info.sponsors.filter(s => s.toLowerCase().indexOf(query) > -1).length > 0) {
+                            const matchingFields = fields.filter(field => field && field.toLowerCase().indexOf(query) > -1);
+                            if (matchingFields.length > 0) {
                                 matches.push(info);
                             }
                         }
@@ -1685,7 +1800,6 @@ exports.getCovidData = (rawType, rawQuery, threadId) => {
                                 msg += `Status: ${match.trialPhase}\n`;
                                 msg += `Sponsor${match.sponsors.length == 1 ? '' : 's'}: ${this.concatNames(match.sponsors)}\n`;
                                 msg += `Institution${match.institutions.length == 1 ? '' : 's'}: ${this.concatNames(match.institutions)}\n`;
-                                msg += `Funding: ${this.concatNames(match.funding)}\n`;
                                 msg += `\n${entities.decode(match.details)}\n`;
                             });
 
@@ -2003,4 +2117,33 @@ exports.getLatestFeedItems = (feedURL, groupInfo, callback) => {
         const newItems = feed.items ? feed.items.filter(item => new Date(item.pubDate) > lastCheck) : [];
         callback(null, newItems, feed);
     });
+};
+
+// Creates a new GitHub issue in the configured repo
+// Takes a reporter (name of person filing the report),
+// creator (name of person creating the ticket), and a text body describing the issue
+// Lastly, takes a callback with parameters for 1) an error (if fails) and
+// (if successful) 2) the created issue's URL and 3) number
+exports.createGitHubIssue = async (sender, reporter, text, type, groupInfo, callback) => {
+    const isBug = type === 'bug';
+    const createdAt = this.getPrettyDateString(new Date());
+    const issueType = isBug ? "Report" : "Request";
+    const title = `[@${reporter} please change the title] ${issueType} in ${groupInfo.name} at ${createdAt}`;
+    const body = `${sender} at ${createdAt}:\n> ${text.replace(/\n/g, "\n> ")}`;
+    const labels = isBug ? ['bug'] : ['new-feature'];
+
+    try {
+        const octokit = getOctokit();
+        const response = await octokit.issues.create({
+            ...config.ghRepo,
+            title,
+            body,
+            labels
+        });
+        const num = response.data.number;
+        const url = `https://github.com/${config.ghRepo.owner}/${config.ghRepo.repo}/issues/${num}`;
+        callback(null, url, num);
+    } catch (err) {
+        callback(err);
+    }
 };

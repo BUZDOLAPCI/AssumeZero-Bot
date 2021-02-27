@@ -623,10 +623,11 @@ const funcs = {
                     const numResults = parseInt(cmatch[2]) || 1; // Number of results to display
                     if (command == "search") { // Is a search command
                         // Output search results / propic
-                        for (let i = 0; i < numResults; i++) {
-                            // Passes number of match to indicate level (closeness to top)
-                            utils.searchForUser(data[i], threadId, i);
-                        }
+                        const descriptions = filteredData.slice(0, numResults).map((match, num) => {
+                            return `${(num === 0) ? "Best match" : "Match " + (num + 1)}: ${match.name}\n${match.profileUrl}\nRank: ${match.score}\nUser ID: ${match.userID}`;
+                        }).join("\n\n");
+
+                        utils.sendFilesFromUrl(bestMatch.photoUrl, threadId, descriptions);
                     } else { // Is an add command
                         // Add best match to group and update log of member IDs
                         utils.addUser(bestMatch.userID, groupInfo);
@@ -1547,7 +1548,7 @@ const funcs = {
             }
         });
     },
-    "event": (threadId, cmatch, groupInfo, _, fromUserId) => {
+    "event": (threadId, cmatch, groupInfo, _, fromUserId, __, mObj) => {
         if (cmatch[1]) {
             // Create event
             const title = cmatch[2];
@@ -1561,6 +1562,14 @@ const funcs = {
             // List event(s)
             const rawTitle = cmatch[7];
             utils.listEvents(rawTitle, groupInfo, threadId);
+        } else if (cmatch[8]) {
+            // Repeat event
+            const interval = cmatch[9];
+            if (mObj.messageReply) {
+                utils.repeatEvent(interval, mObj.messageReply.messageID, groupInfo, threadId);
+            } else {
+                utils.sendError("The repeat command must be a reply to an existing event confirmation", threadId);
+            }
         }
     },
     "covid": (threadId, cmatch) => {
