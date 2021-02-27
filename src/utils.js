@@ -454,7 +454,7 @@ exports.getGroupData = callback => {
         if (err) {
             // Error retrieving data
             callback(err);
-            process.exit(6969);
+            process.exit(92);
         } else {
             // No errors and groups are retrieved
             const groupData = (groups && groups.length) ? JSON.parse(groups) : {};
@@ -701,7 +701,7 @@ exports.updateScore = (isAdd, userId, callback) => {
     this.getScore(userId, (err, val) => {
         if (err) {
             callback(err);
-            process.exit(3131);
+            process.exit(93);
         }
         // Convert from buffer & grab current score (set 0 if it doesn't yet exist)
         const score = val ? parseInt(val.toString()) : 0;
@@ -722,7 +722,7 @@ exports.updateScoreExplicit = (votePoints, userId, callback) => {
     this.getScore(userId, (err, val) => {
         if (err) {
             callback(err);
-            process.exit(3169);
+            process.exit(94);
         }
         // Convert from buffer & grab current score (set 0 if it doesn't yet exist)
         const score = val ? parseInt(val.toString()) : 0;
