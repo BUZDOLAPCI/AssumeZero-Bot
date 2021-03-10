@@ -108,6 +108,10 @@ const eggs = [
         "func": (threadId, messageId) => { utils.reactToMessage(messageId, "like"); }
     },
     {
+        "regex": /\b(judge sa)\b/i,
+        "func": threadId => { utils.sendMessage(`as`, threadId); }
+    },
+    {
         "regex": /\b(savunmadim|cikar goster|savunmadım|çıkar göster)\b/i,
         "func": threadId => { utils.sendFile("../media/cikar_goster.mp4", threadId); }
     },
