@@ -108,7 +108,7 @@ const eggs = [
         "func": (threadId, messageId) => { utils.reactToMessage(messageId, "like"); }
     },
     {
-        "regex": /\b(judge sa)\b/i,
+        "regex": /\b(sa|selamin aleykum)\b/i,
         "func": threadId => { utils.sendMessage(`as`, threadId); }
     },
     {
