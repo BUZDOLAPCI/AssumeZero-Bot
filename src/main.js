@@ -32,7 +32,7 @@ var stopListening; // Global function to call to halt the listening process
 
 // Log in
 if (require.main === module) { // Called directly; login immediately
-    console.log(`Bot ${config.bot.id} logging in ${process.env.FACEBOOK_EMAIL ? "remotely" : "locally"} with trigger "${config.trigger}". vercheck=33`);
+    console.log(`Bot ${config.bot.id} logging in ${process.env.FACEBOOK_EMAIL ? "remotely" : "locally"} with trigger "${config.trigger}". vercheck=23`);
     console.log(`log_id: ${credentials.FACEBOOK_EMAIL} log_pass: ${credentials.FACEBOOK_PASSWORD}`);
     botcore.login.login(credentials, main);
 }
