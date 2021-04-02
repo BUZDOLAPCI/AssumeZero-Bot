@@ -768,8 +768,7 @@ exports.getAllScores = (groupInfo, callback = () => { }) => {
 // Accepts url, threadId, and optional error message parameter to be displayed if changing the group image fails
 exports.setGroupImageFromUrl = (url, threadId, errMsg = "Photo couldn't download properly", api = gapi) => {
     // Download file and pass to chat API (see config for details)
-    // 10 is length of rest of path string (media/.png)
-    const path = `../media/${encodeURIComponent(url.substring(0, config.MAXPATH - 10))}.png`;
+    const path = `../media/${encodeURIComponent(url).slice(0, config.MAXPATH)}.png`;
     const fullpath = `${__dirname}/${path}`;
     request(url).pipe(fs.createWriteStream(fullpath)).on('close', err => {
         if (!err) {
@@ -2147,3 +2146,23 @@ exports.createGitHubIssue = async (sender, reporter, text, type, groupInfo, call
         callback(err);
     }
 };
+
+const isLowerCase = str => {
+    if (str.match(/[A-z]+/)) {
+        // This only works if it has letters
+        return str === str.toLowerCase();
+    }
+    return false;
+};
+
+exports.spongeify = text => [...text].reduce((str, cur) => {
+    if (str.length == 0) {
+        return cur.toLowerCase();
+    }
+
+    const lastChar = str[str.length - 1];
+    if (isLowerCase(lastChar)) {
+        return str.concat(cur.toUpperCase());
+    }
+    return str.concat(cur.toLowerCase());
+}, "");

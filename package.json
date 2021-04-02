@@ -32,12 +32,12 @@
     "humanize-duration": "^3.23.1",
     "jimp": "^0.9.8",
     "memjs": "^1.2.2",
-    "messenger-botcore": "github:AstroCB/BotCore",
+    "messenger-botcore": "^3.0.3",
     "pm2": "^4.4.1",
     "request": "^2.88.2",
     "rss-parser": "^3.9.0",
     "spotify-web-api-node": "^4.0.0",
-    "xmldom": "^0.2.1",
+    "xmldom": "^0.5.0",
     "xpath": "0.0.27"
   },
   "devDependencies": {
