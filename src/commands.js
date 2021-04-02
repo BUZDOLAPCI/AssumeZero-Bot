@@ -646,6 +646,22 @@ exports.categories = {
                 },
                 "regex": /sponge (.+)/i,
                 "experimental": false
+            },
+            "berkify": {
+                "display_names": ["berkify"],
+                "pretty_name": "Berkify",
+                "short_description": "",
+                "description": "bErKifIeS tExT",
+                "syntax": "berkify {text}",
+                "example": "berkify this command works",
+                "sudo": false,
+                "attachments": false,
+                "user_input": {
+                    "accepts": false,
+                    "optional": false
+                },
+                "regex": /berkify (.+)/i,
+                "experimental": false
             }
         }
 

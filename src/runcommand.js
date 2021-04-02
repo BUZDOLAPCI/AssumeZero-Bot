@@ -1751,6 +1751,11 @@ const funcs = {
         const text = cmatch[1];
 
         utils.sendMessage(utils.spongeify(text), threadId);
+    },
+    "berkify": (threadId, cmatch) => {
+        const text = cmatch[1];
+
+        utils.sendMessage(utils.spongeify(text), threadId);
     }
 };
 
